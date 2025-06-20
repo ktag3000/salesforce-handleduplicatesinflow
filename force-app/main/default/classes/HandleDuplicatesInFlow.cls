@@ -12,23 +12,21 @@ public with sharing class HandleDuplicatesInFlow {
     // Method called by flow
     @InvocableMethod(label='Handle Duplicate Record')
     public static void saveDuplicates(List<FlowInputs> inputRecords) {
+        
+        // Define variables to store Contact and Account Id's
+        Id contactId;
+        Id accountId;
 
-        if(inputRecords == null) return;
-
-        Set<Id> contactIds = new Set<Id>();
-        Set<Id> accountIds = new Set<Id>();
-
-        // Loop over flow inputs list to assign object id's to a Set
+        // Loop over flow inputs list to assign object id's
         for (FlowInputs record : inputRecords) {
-
+             
             if(record.contactId != null){
-                contactIds.add(record.contactId);
-            }
+                contactId = record.contactId;
+             }
 
             if(record.accountId != null){
-                accountIds.add(record.accountId);
+                accountId = record.accountId;
             }
-
         }
 
         // Set DML options for duplicates
@@ -37,24 +35,24 @@ public with sharing class HandleDuplicatesInFlow {
         dml.DuplicateRuleHeader.runAsCurrentUser = true; // Runs with sharing context
         
         // Assign id's to a record and update
-        if(!contactIds.isEmpty()){
-            Contact contactRecord = [SELECT Id FROM Contact WHERE Id IN :contactIds];
+        if(contactId != null){
+            Contact contactRecord = [SELECT Id FROM Contact WHERE Id = :contactId];
             Database.SaveResult srContact = Database.update(contactRecord, dml);
             if (srContact.isSuccess()) {
-                System.debug('Contact success: ' +contactRecord);
+                System.debug('Contact success: ' +contactId);
             } else {
                 System.debug('Contact failed: '+srContact.errors);
             }
         }
-
-        if(!accountIds.isEmpty()){
-            Account accountRecord = [SELECT Id FROM Account WHERE Id IN :accountIds];
+        
+        if(accountId != null){
+            Account accountRecord = [SELECT Id FROM Account WHERE Id = :accountId];
             Database.SaveResult srAccount = Database.update(accountRecord, dml);
             if (srAccount.isSuccess()) {
-                    System.debug('Account success: ' +accountRecord);
+                    System.debug('Account success: ' +accountId);
                 } else {
                     System.debug('Account failed: ' +srAccount.errors);
-            }
+                }
         }
     }
 }
