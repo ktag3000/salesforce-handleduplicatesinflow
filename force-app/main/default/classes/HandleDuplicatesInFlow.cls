@@ -13,7 +13,7 @@ public with sharing class HandleDuplicatesInFlow {
     @InvocableMethod(label='Handle Duplicate Record')
     public static void saveDuplicates(List<FlowInputs> inputRecords) {
         
-        // Define variables to store Contact and Account Id's
+        // Define variables to store Contact and Account Id's and to know when the Contact or Acount toggle is used in the flow
         Id contactId;
         Id accountId;
         Boolean contactToggle = false;
