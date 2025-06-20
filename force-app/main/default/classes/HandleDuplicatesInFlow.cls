@@ -16,16 +16,23 @@ public with sharing class HandleDuplicatesInFlow {
         // Define variables to store Contact and Account Id's
         Id contactId;
         Id accountId;
+        Boolean contactToggle = false;
+        Boolean accountToggle = false;
 
         // Loop over flow inputs list to assign object id's
         for (FlowInputs record : inputRecords) {
+            System.debug('before null check');
+            if(record.accountId == null && record.contactId == null) return;
+            System.debug('after null check');
              
             if(record.contactId != null){
                 contactId = record.contactId;
+                contactToggle = true;
              }
 
             if(record.accountId != null){
                 accountId = record.accountId;
+                accountToggle = true;
             }
         }
 
@@ -35,7 +42,7 @@ public with sharing class HandleDuplicatesInFlow {
         dml.DuplicateRuleHeader.runAsCurrentUser = true; // Runs with sharing context
         
         // Assign id's to a record and update
-        if(contactId != null){
+        if(contactToggle == true){
             Contact contactRecord = [SELECT Id FROM Contact WHERE Id = :contactId];
             Database.SaveResult srContact = Database.update(contactRecord, dml);
             if (srContact.isSuccess()) {
@@ -45,7 +52,7 @@ public with sharing class HandleDuplicatesInFlow {
             }
         }
         
-        if(accountId != null){
+        if(accountToggle == true){
             Account accountRecord = [SELECT Id FROM Account WHERE Id = :accountId];
             Database.SaveResult srAccount = Database.update(accountRecord, dml);
             if (srAccount.isSuccess()) {
