@@ -21,9 +21,7 @@ public with sharing class HandleDuplicatesInFlow {
 
         // Loop over flow inputs list to assign object id's
         for (FlowInputs record : inputRecords) {
-            System.debug('before null check');
             if(record.accountId == null && record.contactId == null) return;
-            System.debug('after null check');
              
             if(record.contactId != null){
                 contactId = record.contactId;
