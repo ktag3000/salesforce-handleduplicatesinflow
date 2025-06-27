@@ -1,6 +1,6 @@
 # Salesforce Handle Duplicates in Flow
 
-Allows bypassing duplicate rules in a flow with one action. The action is currently set up to handle Accounts and/or Contacts duplicates.
+Allows bypassing duplicate rules in a flow with one action when receiving the DUPLICATES_DETECTED error. The action is currently set up to handle Accounts and/or Contacts duplicates.
 
 ## How to Use
 
